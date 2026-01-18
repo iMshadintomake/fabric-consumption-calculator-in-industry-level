@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Garment Fabric Consumption Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            opacity: 0.85;
+            font-size: 16px;
+        }
+
+        .calculator-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 25px;
+            border-right: 1px solid #eaeaea;
+        }
+
+        .results-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 25px;
+            background-color: #f9fafc;
+            position: relative;
+        }
+        
+        .creator-credit {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            text-align: center;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            border: 1px solid #d1d9e6;
+            max-width: 200px;
+            z-index: 10;
+        }
+        
+        .creator-credit img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #4a6491;
+            margin-bottom: 10px;
+        }
+        
+        .creator-credit .name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .creator-credit .title {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .creator-credit-bottom {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            text-align: center;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            border: 1px solid #d1d9e6;
+            max-width: 200px;
+            z-index: 1000;
+        }
+        
+        .creator-credit-bottom img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #4a6491;
+            margin-bottom: 10px;
+        }
+        
+        .creator-credit-bottom .name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .creator-credit-bottom .title {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: #4a6491;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d9e6;
+            border-radius: 5px;
+            font-size: 15px;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4a6491;
+            box-shadow: 0 0 0 2px rgba(74, 100, 145, 0.1);
+        }
+
+        .unit-display {
+            display: inline-block;
+            margin-left: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .conditional-field {
+            padding: 15px;
+            background-color: #f0f4f8;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 3px solid #4a6491;
+        }
+
+        .calculate-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4a6491, #2c3e50);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.2);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+
+        .consumption-results {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .consumption-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .consumption-unit {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .consumption-card {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f0f7ff;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .breakdown-table th {
+            background-color: #4a6491;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .breakdown-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .breakdown-table tr:nth-child(even) {
+            background-color: #f9fafc;
+        }
+
+        .breakdown-table tr:hover {
+            background-color: #f0f4f8;
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff8e1;
+            border-radius: 5px;
+            font-size: 14px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .required:after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-wrapper {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .creator-credit {
+                position: static;
+                max-width: 200px;
+                margin: 15px auto;
+            }
+            
+            .creator-credit-bottom {
+                position: static;
+                max-width: 200px;
+                margin: 15px auto;
+                margin-top: 20px;
+            }
+            
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .consumption-results {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .consumption-card {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> Garment Fabric Consumption Calculator</h1>
+            <p>Professional tool for calculating fabric consumption using the area method</p>
+        </header>
+        
+        <div class="calculator-wrapper">
+            <div class="form-section">
+                <form id="consumptionForm">
+                    <!-- Section 1: Basic Fabric Info -->
+                    <div class="section-title">
+                        <i class="fas fa-ruler-combined"></i> BASIC FABRIC INFORMATION
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Fabric Width</label>
+                        <select id="fabricWidth" required>
+                            <option value="44">44 inches</option>
+                            <option value="56">56 inches</option>
+                            <option value="58">58 inches</option>
+                            <option value="60" selected>60 inches</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Fabric Shrinkage Length (%)</label>
+                            <input type="number" id="shrinkageLength" min="0" max="20" step="0.1" value="2">
+                            <span class="unit-display">%</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Fabric Shrinkage Width (%)</label>
+                            <input type="number" id="shrinkageWidth" min="0" max="20" step="0.1" value="1.5">
+                            <span class="unit-display">%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Production Wastage</label>
+                        <select id="productionWastage" required>
+                            <option value="0">0%</option>
+                            <option value="3" selected>3%</option>
+                            <option value="5">5%</option>
+                            <option value="8">8%</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Section 2: Body Measurements -->
+                    <div class="section-title" style="margin-top: 30px;">
+                        <i class="fas fa-user"></i> BODY MEASUREMENTS
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Body Length from HPS (cm)</label>
+                        <input type="number" id="bodyLength" min="1" step="0.1" value="75" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="required">Chest / Bottom Width (cm)</label>
+                            <input type="number" id="chestWidth" min="1" step="0.1" value="52" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Shoulder to Shoulder (cm)</label>
+                            <input type="number" id="shoulderWidth" min="1" step="0.1" value="46" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="required">Yoke Height from Center Back (cm)</label>
+                            <input type="number" id="yokeHeight" min="1" step="0.1" value="12" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Side Seam Feed Allowance (cm)</label>
+                            <input type="number" id="sideSeamAllowance" min="0" step="0.1" value="4.6">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Bottom Hem Allowance</label>
+                        <select id="bottomHemAllowance" required>
+                            <option value="2">2 cm</option>
+                            <option value="3" selected>3 cm</option>
+                            <option value="4">4 cm</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Section 3: Sleeve Options -->
+                    <div class="section-title" style="margin-top: 30px;">
+                        <i class="fas fa-tshirt"></i> SLEEVE OPTIONS
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Sleeve Type</label>
+                        <select id="sleeveType" required>
+                            <option value="long" selected>Long Sleeve</option>
+                            <option value="short">Short Sleeve</option>
+                        </select>
+                    </div>
+                    
+                    <div id="longSleeveFields" class="conditional-field">
+                        <div class="form-group">
+                            <label class="required">Sleeve Length (cm)</label>
+                            <input type="number" id="sleeveLength" min="1" step="0.1" value="60" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Bicep Width (cm)</label>
+                            <input type="number" id="bicepWidth" min="1" step="0.1" value="22" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Armhole Seam Type</label>
+                            <select id="armholeSeamType" required>
+                                <option value="3">French Seam (3 cm allowance)</option>
+                                <option value="2" selected>Overlock (2 cm allowance)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="shortSleeveFields" class="conditional-field" style="display: none;">
+                        <div class="form-group">
+                            <label class="required">Sleeve Length (cm)</label>
+                            <input type="number" id="shortSleeveLength" min="1" step="0.1" value="25" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Sleeve Opening Allowance (cm)</label>
+                            <input type="number" id="sleeveOpeningAllowance" min="0" step="0.1" value="3">
+                        </div>
+                    </div>
+                    
+                    <!-- Section 4: Collar & Cuff -->
+                    <div class="section-title" style="margin-top: 30px;">
+                        <i class="fas fa-vest"></i> COLLAR & CUFF
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Collar Type</label>
+                        <select id="collarType" required>
+                            <option value="with" selected>With Collar</option>
+                            <option value="without">No Collar</option>
+                        </select>
+                    </div>
+                    
+                    <div id="collarFields" class="conditional-field">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="required">Collar Length (cm)</label>
+                                <input type="number" id="collarLength" min="1" step="0.1" value="42" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Collar Point Height (cm)</label>
+                                <input type="number" id="collarPointHeight" min="1" step="0.1" value="8" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="required">Collar Band Length (cm)</label>
+                                <input type="number" id="collarBandLength" min="1" step="0.1" value="40" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Collar Band Height (cm)</label>
+                                <input type="number" id="collarBandHeight" min="1" step="0.1" value="3.5" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Cuff Type</label>
+                        <select id="cuffType" required>
+                            <option value="full" selected>Full Sleeve Cuff</option>
+                            <option value="none">No Cuff</option>
+                        </select>
+                    </div>
+                    
+                    <div id="cuffFields" class="conditional-field">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="required">Cuff Length (cm)</label>
+                                <input type="number" id="cuffLength" min="1" step="0.1" value="24" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Cuff Height (cm)</label>
+                                <input type="number" id="cuffHeight" min="1" step="0.1" value="6" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 5: Placket & Pocket -->
+                    <div class="section-title" style="margin-top: 30px;">
+                        <i class="fas fa-swatchbook"></i> PLACKET & POCKET
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Front Placket Type</label>
+                        <select id="placketType" required>
+                            <option value="single">Single Fold</option>
+                            <option value="double" selected>Double Fold</option>
+                            <option value="welted">Welted & Rolling</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Placket Allowance (auto-set)</label>
+                        <input type="text" id="placketAllowance" value="14.6 cm" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Pocket Option</label>
+                        <select id="pocketOption" required>
+                            <option value="with" selected>With Pocket</option>
+                            <option value="without">No Pocket</option>
+                        </select>
+                    </div>
+                    
+                    <div id="pocketFields" class="conditional-field">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="required">Pocket Length (cm)</label>
+                                <input type="number" id="pocketLength" min="1" step="0.1" value="15" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Pocket Width (cm)</label>
+                                <input type="number" id="pocketWidth" min="1" step="0.1" value="13" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="calculateBtn" class="calculate-btn">
+                        <i class="fas fa-calculator"></i> Calculate Consumption
+                    </button>
+                    
+                    <div class="error-message" id="formError"></div>
+                </form>
+            </div>
+            
+            <div class="results-section">
+                <div class="section-title">
+                    <i class="fas fa-chart-bar"></i> CONSUMPTION RESULTS
+                </div>
+                
+                <div class="results-container">
+                    <p style="margin-bottom: 15px; color: #666;">Fabric consumption calculated using the area method:</p>
+                    
+                    <div class="consumption-results">
+                        <div class="consumption-card">
+                            <div class="consumption-value" id="fabricYard">0.00</div>
+                            <div class="consumption-unit">Yards</div>
+                            <p>Total Fabric Consumption</p>
+                        </div>
+                        <div class="consumption-card">
+                            <div class="consumption-value" id="fabricMeter">0.00</div>
+                            <div class="consumption-unit">Meters</div>
+                            <p>Total Fabric Consumption</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <h3 style="margin-bottom: 15px; color: #2c3e50;">Fabric Usage Breakdown</h3>
+                        <table class="breakdown-table">
+                            <thead>
+                                <tr>
+                                    <th>Garment Part</th>
+                                    <th>Quantity</th>
+                                    <th>Area (cm�)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="breakdownBody">
+                                <!-- Breakdown rows will be inserted here by JavaScript -->
+                                <tr>
+                                    <td colspan="3" style="text-align: center;">No calculation performed yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="footer-note">
+                    <p><strong>Note:</strong> Fabric consumption is calculated using the area method. Each part's area is calculated as (Length + Allowance) � (Width + Allowance) � Quantity. Total area is then converted to fabric length, with shrinkage and wastage applied.</p>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background-color: #f0f7ff; border-radius: 5px;">
+                    <h4 style="margin-bottom: 10px; color: #2c3e50;"><i class="fas fa-info-circle"></i> Calculation Details</h4>
+                    <ul style="padding-left: 20px; font-size: 14px;">
+                        <li>Fabric Length (inch) = Total Area / Fabric Width (inch)</li>
+                        <li>Fabric Length (yard) = Fabric Length / 36</li>
+                        <li>Final Fabric = Base Fabric � (1 + shrinkage%) � (1 + wastage%)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+                
+                </div>
+        </div>
+    </div>
+    
+    <div class="creator-credit-bottom">
+        <img src="https://i.postimg.cc/pdbMYf6s/unnamed.jpg" alt="Creator">
+        <div class="name">Shadhin Serder</div>
+        <div class="title">AI Engineer</div>
+    </div>
+
+    <script>
+        // DOM elements
+        const form = document.getElementById('consumptionForm');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const sleeveTypeSelect = document.getElementById('sleeveType');
+        const collarTypeSelect = document.getElementById('collarType');
+        const cuffTypeSelect = document.getElementById('cuffType');
+        const pocketOptionSelect = document.getElementById('pocketOption');
+        const placketTypeSelect = document.getElementById('placketType');
+        const placketAllowanceInput = document.getElementById('placketAllowance');
+        const formError = document.getElementById('formError');
+        
+        // Results elements
+        const fabricYardElement = document.getElementById('fabricYard');
+        const fabricMeterElement = document.getElementById('fabricMeter');
+        const breakdownBody = document.getElementById('breakdownBody');
+        
+        // Initialize conditional field visibility
+        updateConditionalFields();
+        
+        // Event listeners for dropdown changes
+        sleeveTypeSelect.addEventListener('change', updateConditionalFields);
+        collarTypeSelect.addEventListener('change', updateConditionalFields);
+        cuffTypeSelect.addEventListener('change', updateConditionalFields);
+        pocketOptionSelect.addEventListener('change', updateConditionalFields);
+        placketTypeSelect.addEventListener('change', updatePlacketAllowance);
+        
+        // Set placket allowance based on type
+        function updatePlacketAllowance() {
+            const placketType = placketTypeSelect.value;
+            let allowance = "14.6 cm"; // Default for double fold
+            
+            if (placketType === "single") {
+                allowance = "8.2 cm";
+            } else if (placketType === "welted") {
+                allowance = "12.4 cm";
+            }
+            
+            placketAllowanceInput.value = allowance;
+        }
+        
+        // Call initially to set the correct value
+        updatePlacketAllowance();
+        
+        // Function to show/hide conditional fields based on selections
+        function updateConditionalFields() {
+            // Sleeve type fields
+            const sleeveType = sleeveTypeSelect.value;
+            document.getElementById('longSleeveFields').style.display = sleeveType === 'long' ? 'block' : 'none';
+            document.getElementById('shortSleeveFields').style.display = sleeveType === 'short' ? 'block' : 'none';
+            
+            // Collar fields
+            const collarType = collarTypeSelect.value;
+            document.getElementById('collarFields').style.display = collarType === 'with' ? 'block' : 'none';
+            
+            // Cuff fields
+            const cuffType = cuffTypeSelect.value;
+            document.getElementById('cuffFields').style.display = cuffType === 'full' ? 'block' : 'none';
+            
+            // Pocket fields
+            const pocketOption = pocketOptionSelect.value;
+            document.getElementById('pocketFields').style.display = pocketOption === 'with' ? 'block' : 'none';
+        }
+        
+        // Validate form inputs
+        function validateForm() {
+            formError.style.display = 'none';
+            
+            // Get all required inputs
+            const requiredInputs = form.querySelectorAll('input[required], select[required]');
+            
+            for (let input of requiredInputs) {
+                // Skip hidden conditional inputs
+                if (input.closest('.conditional-field') && 
+                    input.closest('.conditional-field').style.display === 'none') {
+                    continue;
+                }
+                
+                if (input.type === 'number' && (input.value === '' || parseFloat(input.value) <= 0)) {
+                    formError.textContent = `Please enter a valid positive number for ${input.previousElementSibling.textContent}`;
+                    formError.style.display = 'block';
+                    input.focus();
+                    return false;
+                }
+                
+                if (input.type === 'select-one' && input.value === '') {
+                    formError.textContent = `Please select an option for ${input.previousElementSibling.textContent}`;
+                    formError.style.display = 'block';
+                    input.focus();
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // Calculate fabric consumption using area method
+        function calculateConsumption() {
+            // Validate form before calculation
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Get all input values
+            const fabricWidthInches = parseFloat(document.getElementById('fabricWidth').value);
+            const shrinkageLength = parseFloat(document.getElementById('shrinkageLength').value) / 100;
+            const shrinkageWidth = parseFloat(document.getElementById('shrinkageWidth').value) / 100;
+            const productionWastage = parseFloat(document.getElementById('productionWastage').value) / 100;
+            
+            // Body measurements
+            const bodyLength = parseFloat(document.getElementById('bodyLength').value);
+            const chestWidth = parseFloat(document.getElementById('chestWidth').value);
+            const shoulderWidth = parseFloat(document.getElementById('shoulderWidth').value);
+            const yokeHeight = parseFloat(document.getElementById('yokeHeight').value);
+            const sideSeamAllowance = parseFloat(document.getElementById('sideSeamAllowance').value);
+            const bottomHemAllowance = parseFloat(document.getElementById('bottomHemAllowance').value);
+            
+            // Sleeve values
+            const sleeveType = sleeveTypeSelect.value;
+            let sleeveLength, sleeveWidth, sleeveAllowance;
+            
+            if (sleeveType === 'long') {
+                sleeveLength = parseFloat(document.getElementById('sleeveLength').value);
+                sleeveWidth = parseFloat(document.getElementById('bicepWidth').value);
+                sleeveAllowance = parseFloat(document.getElementById('armholeSeamType').value);
+            } else {
+                sleeveLength = parseFloat(document.getElementById('shortSleeveLength').value);
+                sleeveWidth = sleeveLength / 2; // Approximation for short sleeve width
+                sleeveAllowance = parseFloat(document.getElementById('sleeveOpeningAllowance').value);
+            }
+            
+            // Collar values (if applicable)
+            let collarLength = 0, collarHeight = 0, collarBandLength = 0, collarBandHeight = 0;
+            if (collarTypeSelect.value === 'with') {
+                collarLength = parseFloat(document.getElementById('collarLength').value);
+                collarHeight = parseFloat(document.getElementById('collarPointHeight').value);
+                collarBandLength = parseFloat(document.getElementById('collarBandLength').value);
+                collarBandHeight = parseFloat(document.getElementById('collarBandHeight').value);
+            }
+            
+            // Cuff values (if applicable)
+            let cuffLength = 0, cuffHeight = 0;
+            if (cuffTypeSelect.value === 'full') {
+                cuffLength = parseFloat(document.getElementById('cuffLength').value);
+                cuffHeight = parseFloat(document.getElementById('cuffHeight').value);
+            }
+            
+            // Pocket values (if applicable)
+            let pocketLength = 0, pocketWidth = 0;
+            if (pocketOptionSelect.value === 'with') {
+                pocketLength = parseFloat(document.getElementById('pocketLength').value);
+                pocketWidth = parseFloat(document.getElementById('pocketWidth').value);
+            }
+            
+            // Calculate area for each part using area method
+            const parts = [];
+            let totalArea = 0;
+            
+            // 1. Body (front + back) - assuming front and back are similar
+            const bodyFinalLength = bodyLength + bottomHemAllowance + sideSeamAllowance;
+            const bodyFinalWidth = chestWidth + sideSeamAllowance * 2; // Allowance on both sides
+            const bodyArea = bodyFinalLength * bodyFinalWidth * 2; // Front and back
+            parts.push({ name: 'Body (Front+Back)', quantity: 2, area: bodyArea });
+            totalArea += bodyArea;
+            
+            // 2. Sleeves (�2)
+            const sleeveFinalLength = sleeveLength + sleeveAllowance;
+            const sleeveFinalWidth = sleeveWidth + sleeveAllowance * 2;
+            const sleeveArea = sleeveFinalLength * sleeveFinalWidth * 2; // Two sleeves
+            parts.push({ name: 'Sleeves', quantity: 2, area: sleeveArea });
+            totalArea += sleeveArea;
+            
+            // 3. Yoke
+            const yokeFinalLength = shoulderWidth + sideSeamAllowance * 2;
+            const yokeFinalWidth = yokeHeight + sideSeamAllowance;
+            const yokeArea = yokeFinalLength * yokeFinalWidth;
+            parts.push({ name: 'Yoke', quantity: 1, area: yokeArea });
+            totalArea += yokeArea;
+            
+            // 4. Collar (if applicable)
+            if (collarTypeSelect.value === 'with') {
+                // Collar leaf (�2)
+                const collarLeafArea = (collarLength + 2) * (collarHeight + 2) * 2;
+                parts.push({ name: 'Collar Leaf', quantity: 2, area: collarLeafArea });
+                totalArea += collarLeafArea;
+                
+                // Collar band (�2)
+                const collarBandArea = (collarBandLength + 2) * (collarBandHeight + 2) * 2;
+                parts.push({ name: 'Collar Band', quantity: 2, area: collarBandArea });
+                totalArea += collarBandArea;
+            }
+            
+            // 5. Cuff (if applicable)
+            if (cuffTypeSelect.value === 'full') {
+                const cuffFinalLength = cuffLength + 2;
+                const cuffFinalHeight = cuffHeight + 2;
+                const cuffArea = cuffFinalLength * cuffFinalHeight * 2; // Two cuffs
+                parts.push({ name: 'Cuffs', quantity: 2, area: cuffArea });
+                totalArea += cuffArea;
+            }
+            
+            // 6. Pocket (if applicable)
+            if (pocketOptionSelect.value === 'with') {
+                const pocketFinalLength = pocketLength + 2;
+                const pocketFinalWidth = pocketWidth + 2;
+                const pocketArea = pocketFinalLength * pocketFinalWidth;
+                parts.push({ name: 'Pocket', quantity: 1, area: pocketArea });
+                totalArea += pocketArea;
+            }
+            
+            // 7. Placket allowance (estimation based on type)
+            const placketType = placketTypeSelect.value;
+            let placketArea = 0;
+            if (placketType === 'single') {
+                placketArea = 200; // Approximate area in cm�
+            } else if (placketType === 'double') {
+                placketArea = 350; // Approximate area in cm�
+            } else if (placketType === 'welted') {
+                placketArea = 280; // Approximate area in cm�
+            }
+            
+            if (placketArea > 0) {
+                parts.push({ name: 'Placket', quantity: 1, area: placketArea });
+                totalArea += placketArea;
+            }
+            
+            // Convert total area to fabric length
+            // 1 inch = 2.54 cm, so convert cm� to inch� first
+            const totalAreaInch2 = totalArea / (2.54 * 2.54);
+            
+            // Calculate fabric length in inches
+            const fabricLengthInch = totalAreaInch2 / fabricWidthInches;
+            
+            // Convert to yards
+            const fabricLengthYard = fabricLengthInch / 36;
+            
+            // Apply shrinkage and production wastage
+            const finalFabricYard = fabricLengthYard * (1 + shrinkageLength) * (1 + productionWastage);
+            
+            // Convert yards to meters (1 yard = 0.9144 meters)
+            const finalFabricMeter = finalFabricYard * 0.9144;
+            
+            // Update results display
+            fabricYardElement.textContent = finalFabricYard.toFixed(2);
+            fabricMeterElement.textContent = finalFabricMeter.toFixed(2);
+            
+            // Update breakdown table
+            updateBreakdownTable(parts, totalArea);
+        }
+        
+        // Update the breakdown table with part details
+        function updateBreakdownTable(parts, totalArea) {
+            // Clear existing rows
+            breakdownBody.innerHTML = '';
+            
+            // Add each part as a row
+            parts.forEach(part => {
+                const row = document.createElement('tr');
+                
+                const nameCell = document.createElement('td');
+                nameCell.textContent = part.name;
+                
+                const quantityCell = document.createElement('td');
+                quantityCell.textContent = part.quantity;
+                
+                const areaCell = document.createElement('td');
+                areaCell.textContent = part.area.toFixed(2);
+                
+                row.appendChild(nameCell);
+                row.appendChild(quantityCell);
+                row.appendChild(areaCell);
+                
+                breakdownBody.appendChild(row);
+            });
+            
+            // Add total row
+            const totalRow = document.createElement('tr');
+            totalRow.style.fontWeight = 'bold';
+            totalRow.style.backgroundColor = '#e8f4fd';
+            
+            const totalNameCell = document.createElement('td');
+            totalNameCell.textContent = 'TOTAL AREA';
+            
+            const totalQuantityCell = document.createElement('td');
+            totalQuantityCell.textContent = '';
+            
+            const totalAreaCell = document.createElement('td');
+            totalAreaCell.textContent = totalArea.toFixed(2);
+            
+            totalRow.appendChild(totalNameCell);
+            totalRow.appendChild(totalQuantityCell);
+            totalRow.appendChild(totalAreaCell);
+            
+            breakdownBody.appendChild(totalRow);
+        }
+        
+        // Initialize with a sample calculation
+        window.addEventListener('DOMContentLoaded', function() {
+            calculateConsumption();
+        });
+        
+        // Add event listener to calculate button
+        calculateBtn.addEventListener('click', calculateConsumption);
+    </script>
+</body>
+</html>
